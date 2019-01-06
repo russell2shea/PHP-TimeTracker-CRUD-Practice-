@@ -22,5 +22,33 @@
 
 		}
 
+	}
+
+/* Add a project to the DB */
+	function add_project($title, $category){
+		include 'connection.php';
+
+		// SQL to Create new column into projects table
+		$sql = 'INSERT INTO projects(title,category)VALUES(?,?)';
+
+		try{
+			// optimize SQL statment to prevent errors
+			$results = $db->prepare($sql);
+
+			// Bind(first place holder, var, data type for that param)
+			$results->bindValue(1, $title, PDO::PARAM_STR);
+			$results->bindValue(2, $category, PDO::PARAM_STR);
+
+			//Execute the prepared query. 
+			$results->execute();
+
+
+		}
+		catch(Exception $e) {
+			echo "Error!:".$e->getMessage()."<br>";
+			return false;
+		}
+
+		return true;
 
 	}

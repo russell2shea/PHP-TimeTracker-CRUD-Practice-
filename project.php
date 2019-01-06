@@ -16,8 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } 
 
     else {
-        echo "title = $title<br />";
-        echo "category = $category<br />";
+        /* If can cadd a project redirect to the page */
+        if(add_project($title, $category)){
+            header('Location: project_list.php');
+            exit;
+        } else {
+            $error_message = 'Could not add project';
+        }
+       
+
     }
 }
 
