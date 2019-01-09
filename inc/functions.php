@@ -75,3 +75,34 @@
 		return true;
 
 	}
+
+/* Add a task to the DB */
+	function add_task($project_id, $title, $date, $time){
+		include 'connection.php';
+
+		// SQL to Create new column into projects table
+		$sql = 'INSERT INTO tasks(project_id, title, date, time) VALUES(?, ?, ?, ?)';
+
+		try{
+			// optimize SQL statment to prevent errors
+			$results = $db->prepare($sql);
+
+			// Bind(# place holder, var, data type for that param)
+			$results->bindValue(1, $project_id, PDO::PARAM_INT);
+			$results->bindValue(2, $title, PDO::PARAM_STR);
+			$results->bindValue(3, $date, PDO::PARAM_STR);
+			$results->bindValue(4, $time, PDO::PARAM_INT);
+
+			//Execute the prepared query. 
+			$results->execute();
+
+
+		}
+		catch(Exception $e) {
+			echo "Error!:".$e->getMessage()."<br>";
+			return false;
+		}
+
+		return true;
+
+	}
