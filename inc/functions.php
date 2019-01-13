@@ -25,7 +25,7 @@
 	}
 
 /* Try to pull all tasks from the database */
-	function get_task_list(){
+	function get_task_list($filter = null){
 
 		//Take all code from the connection.php file and copy it here. Wills how warning not fatal error if something goes wrong
 		include 'connection.php';
@@ -34,8 +34,17 @@
 		$sql = 'SELECT tasks.*, projects.title as project FROM tasks'
 			. ' JOIN projects ON tasks.project_id = projects.project_id';
 		
-		try{
-			return $db->query($sql);
+
+    	$orderBy = ' ORDER BY date DESC';
+
+		//If filter param is not null change orderBy
+	    if ($filter) {
+	        $orderBy = ' ORDER BY projects.title ASC, date DESC';
+	    }
+    
+    	try {
+	        $results = $db->prepare($sql . $orderBy);
+	        $results->execute();
 		}
 
 		//If can't read them show error message and stop
@@ -44,6 +53,7 @@
 			return array();
 
 		}
+    	return $results->fetchAll(PDO::FETCH_ASSOC);
 
 	}
 
