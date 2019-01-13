@@ -35,6 +35,13 @@
 			. ' JOIN projects ON tasks.project_id = projects.project_id';
 		
 
+	    $where = '';
+	    if (is_array($filter)) {
+	        if ($filter[0] == 'project') {
+	            $where = ' WHERE projects.project_id = ?';
+	        }
+	    }
+
     	$orderBy = ' ORDER BY date DESC';
 
 		//If filter param is not null change orderBy
@@ -43,7 +50,12 @@
 	    }
     
     	try {
-	        $results = $db->prepare($sql . $orderBy);
+	        $results = $db->prepare($sql . $where . $orderBy);
+
+	        if(is_array($filter)){
+            	$results->bindValue(1, $filter[1], PDO::PARAM_INT);
+	        }
+
 	        $results->execute();
 		}
 
